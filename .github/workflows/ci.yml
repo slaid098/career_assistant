@@ -1,0 +1,43 @@
+name: Backend CI
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'backend/**'
+  pull_request:
+    branches: [ main ]
+    paths:
+      - 'backend/**'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: ./backend
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.13'
+
+    - name: Install uv
+      run: curl -LsSf https://astral.sh/uv/install.sh | sh
+
+    - name: Configure uv
+      run: source ~/.cargo/env && uv venv
+
+    - name: Install dependencies
+      run: source .venv/bin/activate && uv sync --dev
+
+    - name: Lint with ruff
+      run: source .venv/bin/activate && ruff check .
+
+    - name: Run tests
+      run: source .venv/bin/activate && pytest 
