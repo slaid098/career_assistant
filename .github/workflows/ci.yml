@@ -31,13 +31,13 @@ jobs:
       run: curl -LsSf https://astral.sh/uv/install.sh | sh
 
     - name: Configure uv
-      run: source ~/.cargo/env && uv venv
+      run: uv venv
 
     - name: Install dependencies
-      run: source .venv/bin/activate && uv sync --dev
+      run: uv sync --dev
 
     - name: Lint with ruff
-      run: source .venv/bin/activate && ruff check .
+      run: uv run ruff check .
 
     - name: Run tests
-      run: source .venv/bin/activate && pytest --no-tests-found-exit-code=0 
+      run: uv run pytest --no-tests-found-exit-code=0 
