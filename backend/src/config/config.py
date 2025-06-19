@@ -4,7 +4,7 @@ from pydantic import BaseModel, Field
 from pydantic_settings import SettingsConfigDict
 from pydantic_settings_yaml import YamlBaseSettings
 
-# from src.utils.notify_logger.config import LoggerConfig
+from src.utils.notify_logger.config import LoggerConfig
 
 
 def get_base_dir() -> Path:
@@ -107,7 +107,7 @@ class BackendConfig(BaseModel):
         api (ApiConfig): Configuration settings for the API server.
     """
 
-    # logger: LoggerConfig = Field(default_factory=LoggerConfig)
+    logger: LoggerConfig = Field(default_factory=LoggerConfig)
     database: DatabaseConfig = Field(default_factory=DatabaseConfig)
     api: ApiConfig = Field(default_factory=ApiConfig)
 

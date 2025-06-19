@@ -10,12 +10,11 @@ def get_tortoise_orm_config(
     db_config: DatabaseConfig,
     models_files: list[str],
 ) -> dict[str, Any]:
-    """
-    Returns the configuration for Tortoise ORM.
+    """Returns the configuration for Tortoise ORM.
 
-    The configuration is determined by the `db_config` object. If `db_config.url`
-    is provided, it's used directly. Otherwise, connection parameters are
-    assembled from the other `db_config` attributes.
+    The configuration is determined by the `db_config` object.
+    If `db_config.url` is provided, it's used directly. Otherwise, connection
+    parameters are assembled from the other `db_config` attributes.
 
     Args:
         db_config: The database configuration object.
@@ -23,6 +22,7 @@ def get_tortoise_orm_config(
 
     Returns:
         The configuration dictionary for Tortoise ORM.
+
     """
     connection_config: dict[str, Any]
     if db_config.url:
