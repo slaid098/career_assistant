@@ -1,2 +1,0 @@
-database_url: sqlite://db.sqlite3
-telegram_bot_token: YOUR_TELEGRAM_BOT_TOKEN 
