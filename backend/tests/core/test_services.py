@@ -1,6 +1,7 @@
 from unittest.mock import AsyncMock, MagicMock
 
 import pytest
+from pydantic import HttpUrl
 
 from src.core.parsers.base import BaseParser
 from src.core.schemas import JobSchema
@@ -9,20 +10,20 @@ from src.db.repository import JobRepository
 
 
 @pytest.mark.asyncio
-async def test_parser_service_processes_and_saves_jobs():
+async def test_parser_service_processes_and_saves_jobs() -> None:
     """Tests that ParserService correctly processes content and saves jobs."""
     # 1. Arrange
     # Create fake job data that the mock parser will return
     fake_jobs = [
         JobSchema(
             title="Python Developer",
-            url="https://example.com/job/1",  # type: ignore
+            url=HttpUrl("https://example.com/job/1"),
             company="Test Corp",
             location="Remote",
         ),
         JobSchema(
             title="Data Scientist",
-            url="https://example.com/job/2",  # type: ignore
+            url=HttpUrl("https://example.com/job/2"),
             company="Data Inc.",
             location="New York",
         ),
@@ -40,9 +41,7 @@ async def test_parser_service_processes_and_saves_jobs():
     mock_repo = AsyncMock(spec=JobRepository)
 
     # Instantiate the service with mocks
-    service = ParserService(
-        parser=mock_parser, repo=mock_repo, client=mock_client
-    )
+    service = ParserService(parser=mock_parser, repo=mock_repo, client=mock_client)
 
     # 2. Act
     test_url = "https://fake-url.com"
