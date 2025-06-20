@@ -22,10 +22,10 @@ class Job(models.Model):
 
     id = fields.IntField(primary_key=True)
     title = fields.CharField(max_length=255)
-    company = fields.CharField(max_length=255)
-    location = fields.CharField(max_length=255)
+    company = fields.CharField(max_length=255, null=True)
+    location = fields.CharField(max_length=255, null=True)
     url = fields.CharField(max_length=512, unique=True, db_index=True)
-    description = fields.TextField()
+    description = fields.TextField(null=True)
     salary = fields.CharField(max_length=255, null=True)
     posted_date = fields.DatetimeField(null=True)
 
