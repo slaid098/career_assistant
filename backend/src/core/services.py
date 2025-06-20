@@ -1,9 +1,13 @@
+from typing import TYPE_CHECKING
+
 import httpx
 
 from src.core.parsers.base import BaseParser
-from src.core.schemas import JobSchema
 from src.db.repository import JobRepository
 from src.utils.notify_logger.logger import logger
+
+if TYPE_CHECKING:
+    from src.core.schemas import JobSchema
 
 
 class ParserService:
@@ -14,7 +18,7 @@ class ParserService:
         parser: BaseParser,
         repo: JobRepository,
         client: httpx.AsyncClient | None = None,
-    ):
+    ) -> None:
         """
         Initializes the ParserService.
 
@@ -49,5 +53,5 @@ class ParserService:
 
         for job_data in jobs:
             await self._repo.update_or_create(job_data)
-            
-        logger.info(f"Processed {len(jobs)} jobs from {url}") 
+
+        logger.info(f"Processed {len(jobs)} jobs from {url}")

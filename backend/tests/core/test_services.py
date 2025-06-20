@@ -1,5 +1,6 @@
-import pytest
 from unittest.mock import AsyncMock, MagicMock
+
+import pytest
 
 from src.core.parsers.base import BaseParser
 from src.core.schemas import JobSchema
@@ -55,4 +56,4 @@ async def test_parser_service_processes_and_saves_jobs():
     # Verify that the repository's method was called for each job
     assert mock_repo.update_or_create.call_count == len(fake_jobs)
     mock_repo.update_or_create.assert_any_call(fake_jobs[0])
-    mock_repo.update_or_create.assert_any_call(fake_jobs[1]) 
+    mock_repo.update_or_create.assert_any_call(fake_jobs[1])

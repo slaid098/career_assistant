@@ -1,10 +1,12 @@
 from __future__ import annotations
 
 from typing import Any
+
 from pydantic import HttpUrl
 
-from src.db.models.job import Job
 from src.core.schemas import JobSchema
+from src.db.models.job import Job
+
 
 class JobRepository:
     """A repository for handling job data persistence."""

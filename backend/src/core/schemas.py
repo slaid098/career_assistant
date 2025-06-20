@@ -9,4 +9,4 @@ class JobSchema(BaseModel):
     company: str | None = None
     salary: str | None = None
     location: str | None = None
-    description: str | None = None 
+    description: str | None = None

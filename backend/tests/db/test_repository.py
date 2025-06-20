@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import pytest
 
-from src.db.models.job import Job
 from src.db.repository import JobRepository
 
 
