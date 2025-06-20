@@ -6,6 +6,7 @@ from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from apscheduler.triggers.date import DateTrigger
 from apscheduler.triggers.interval import IntervalTrigger
 
+from src.core.tasks import parse_habr_vacancies
 from src.utils.notify_logger.logger import logger
 
 if TYPE_CHECKING:
@@ -21,6 +22,12 @@ class TaskScheduler:
         self.scheduler = AsyncIOScheduler()
         self._is_running = False
         self.name = self.__class__.__name__
+        self.setup_jobs()
+
+    def setup_jobs(self) -> None:
+        """Add all scheduled jobs to the scheduler."""
+        self.add_interval_job(parse_habr_vacancies, minutes=60)
+        logger.info("Parsing jobs have been set up.", author=self.name)
 
     def start(self) -> None:
         """Start the scheduler."""
