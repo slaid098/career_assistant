@@ -1,54 +1,48 @@
 from __future__ import annotations
 
-import asyncio
 from pathlib import Path
 
 import pytest
+from pydantic import HttpUrl
 
-from src.core.parsers.base import BaseParser
 from src.core.parsers.habr import HabrParser
 
 
-@pytest.mark.asyncio
-async def test_parser_inheritance_and_interface() -> None:
-    """
-    Tests that a concrete parser correctly inherits from BaseParser
-    and implements the required 'parse' method.
-    """
-    assert issubclass(HabrParser, BaseParser)
-    parser_instance = HabrParser()
-    assert hasattr(parser_instance, "parse")
-    assert not asyncio.iscoroutinefunction(parser_instance.parse)
+@pytest.fixture
+def habr_html_content() -> str:
+    """Provides the HTML content of a test page from career.habr.com."""
+    path = Path(__file__).parent.parent / "test_data" / "habr_vacancies.html"
+    with path.open(encoding="utf-8") as f:
+        return f.read()
 
 
-@pytest.mark.asyncio
-async def test_habr_parser_parses_job_correctly() -> None:
+def test_habr_parser_returns_correct_job_list(habr_html_content: str) -> None:
     """
-    Tests that HabrParser correctly parses a local HTML file
-    and returns a valid Job object.
-    """
-    base_dir = Path(__file__).parent.parent
-    html_path = base_dir / "test_data" / "html" / "habr_python_developer.html"
-    html_content = html_path.read_text(encoding="utf-8")
+    Tests that the HabrParser correctly parses a list of jobs from HTML.
 
+    Args:
+        habr_html_content: HTML content of the job listing page.
+    """
+    # 1. Arrange
     parser = HabrParser()
-    jobs = parser.parse(html_content)
 
-    assert jobs
-    job = jobs[0]
+    # 2. Act
+    jobs = parser.parse(habr_html_content)
 
-    assert "Python" in job.title
+    # 3. Assert
+    # The test HTML has 3 vacancy cards, but one is malformed (no title link).
+    # The parser should gracefully skip it and return 2 valid jobs.
+    assert len(jobs) == 2
 
-    if job.company:
-        assert "Best Company Ever" in job.company
+    # Check the first job in detail
+    first_job = jobs[0]
+    assert first_job.title == "Python Developer"
+    assert first_job.company == "Test Corp"
+    assert first_job.salary == "$5000 - $7000"
+    assert first_job.location == "Remote"
+    assert first_job.description == "We are looking for a skilled Python developer."
+    assert first_job.url == HttpUrl("https://career.habr.com/vacancies/10001")
 
-    if job.location:
-        assert "Москва" in job.location
-
-    if job.salary:
-        assert "250 000" in job.salary
-
-    if job.description:
-        assert "Python" in job.description
-        assert "django" in job.description.lower()
-        assert "fastapi" in job.description.lower()
+    # Check the second job's title to ensure it was also parsed
+    second_job = jobs[1]
+    assert second_job.title == "Data Scientist"
