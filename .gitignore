@@ -152,4 +152,10 @@ cython_debug/
 *.sln
 *.sw?
 
+# Cursor
+.cursor/
+architecture.md
+tasks.md
+*.code-workspace
+
 # Add any other rules or patterns as needed 
