@@ -8,4 +8,4 @@ def get_job_service() -> JobService:
     Returns:
         JobService: An instance of the JobService.
     """
-    return JobService() 
+    return JobService()

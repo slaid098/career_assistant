@@ -1,9 +1,11 @@
 import httpx
+from fastapi import HTTPException
 from loguru import logger
 from fastapi import HTTPException
 from tortoise.exceptions import DoesNotExist
 
 from src.core.parsers.habr import HabrParser
+from src.db.models import Job
 from src.db.repository import JobRepository
 from src.db.models import Job
 

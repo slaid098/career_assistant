@@ -17,7 +17,6 @@ async def get_all_jobs(
     Возвращает список всех вакансий.
     """
     jobs = await job_service.get_all_jobs()
-    # Явно преобразуем объекты Job ORM в объекты JobResponse Pydantic
     return [JobResponse.model_validate(job) for job in jobs]
 
 
