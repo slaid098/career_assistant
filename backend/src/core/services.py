@@ -4,7 +4,6 @@ from loguru import logger
 
 from src.core.parsers.habr import HabrParser
 from src.db.models import Job
-from src.db.models import Job
 from src.db.repository import JobRepository
 
 
