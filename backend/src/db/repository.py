@@ -13,6 +13,15 @@ if TYPE_CHECKING:
 class JobRepository:
     """A repository for handling job data persistence."""
 
+    async def get_all_jobs(self) -> list[Job]:
+        """
+        Retrieves all job entries from the database.
+
+        Returns:
+            list[Job]: A list of all Job objects.
+        """
+        return await Job.all()
+
     async def create_job(
         self,
         title: str,
@@ -69,3 +78,27 @@ class JobRepository:
             defaults=job_dict, url=job_dict["url"],
         )
         return job
+
+    async def add_one(self, **kwargs: Any) -> Job:
+        """
+        Adds a single object to the database.
+
+        Args:
+            **kwargs: The data for the object to be created.
+
+        Returns:
+            The created object.
+        """
+        return await Job.create(**kwargs)
+
+    async def get_by_id(self, obj_id: int) -> Job | None:
+        """
+        Retrieves an object by its ID.
+
+        Args:
+            obj_id: The ID of the object to retrieve.
+
+        Returns:
+            The retrieved object or None if not found.
+        """
+        return await Job.get_or_none(id=obj_id)
