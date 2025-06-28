@@ -1,11 +1,13 @@
 from __future__ import annotations
 
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
-from pydantic import HttpUrl
-
-from src.core.schemas import JobSchema
 from src.db.models.job import Job
+
+if TYPE_CHECKING:
+    from pydantic import HttpUrl
+
+    from src.core.schemas import JobSchema
 
 
 class JobRepository:
@@ -63,7 +65,7 @@ class JobRepository:
         Updates an existing job or creates a new one based on the URL.
         """
         job_dict = job_schema.model_dump(mode="json", exclude_unset=True)
-        job, created = await Job.update_or_create(
-            defaults=job_dict, url=job_dict["url"]
+        job, _ = await Job.update_or_create(
+            defaults=job_dict, url=job_dict["url"],
         )
         return job
