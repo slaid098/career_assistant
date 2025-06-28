@@ -1,8 +1,10 @@
-from pydantic import BaseModel, HttpUrl
+from __future__ import annotations
+
+from pydantic import BaseModel, HttpUrl, field_validator
 
 
 class JobSchema(BaseModel):
-    """Pydantic schema for a job listing."""
+    """Represents a job vacancy with its essential details."""
 
     title: str
     url: HttpUrl
@@ -10,3 +12,11 @@ class JobSchema(BaseModel):
     salary: str | None = None
     location: str | None = None
     description: str | None = None
+
+    @field_validator("title", "company", "location", "description", "salary")
+    @classmethod
+    def strip_and_clean(cls, value: str | None) -> str | None:
+        """Removes leading/trailing whitespace and newlines."""
+        if value:
+            return " ".join(value.strip().split())
+        return value
