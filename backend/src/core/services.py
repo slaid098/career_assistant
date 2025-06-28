@@ -1,57 +1,74 @@
-from typing import TYPE_CHECKING
 
 import httpx
+from loguru import logger
 
-from src.core.parsers.base import BaseParser
+from src.core.parsers.habr import HabrParser
 from src.db.repository import JobRepository
-from src.utils.notify_logger.logger import logger
-
-if TYPE_CHECKING:
-    from src.core.schemas import JobSchema
 
 
-class ParserService:
-    """A service for parsing jobs from a URL and saving them to the database."""
+class JobService:
+    """A service for processing jobs and saving them to the database."""
 
     def __init__(
         self,
-        parser: BaseParser,
-        repo: JobRepository,
-        client: httpx.AsyncClient | None = None,
+        repo: JobRepository | None = None,
     ) -> None:
         """
-        Initializes the ParserService.
+        Initializes the JobService.
 
         Args:
-            parser: An instance of a class that inherits from BaseParser.
             repo: An instance of JobRepository.
-            client: An optional httpx.AsyncClient for making web requests.
         """
-        self._parser = parser
-        self._repo = repo
-        self._client = client or httpx.AsyncClient()
+        self._repo = repo or JobRepository()
 
-    async def process_url(self, url: str) -> None:
+    async def process_habr_vacancies(self) -> None:
         """
-        Processes a URL to fetch, parse, and save job listings.
+        Fetches, parses, and saves new job vacancies from Habr Career.
+        """
+        url = "https://career.habr.com/vacancies/python_developer"
+        headers = {
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36",  # noqa: E501
+        }
+        logger.info("Starting Habr Career processing...")
 
-        Args:
-            url: The URL to process.
-        """
         try:
-            response = await self._client.get(url)
-            response.raise_for_status()
-            content = response.text
+            async with httpx.AsyncClient(headers=headers, follow_redirects=True) as client:
+                response = await client.get(url)
+                response.raise_for_status()
         except httpx.HTTPStatusError as e:
-            logger.error(f"HTTP error occurred while fetching {url}: {e}")
+            logger.error("HTTP error occurred while fetching Habr vacancies: {error}", error=e)
             return
         except httpx.RequestError as e:
-            logger.error(f"An error occurred while requesting {url}: {e}")
+            logger.error("Request error occurred while fetching Habr vacancies: {error}", error=e)
             return
 
-        jobs: list[JobSchema] = self._parser.parse(content=content)
+        parser = HabrParser()
+        jobs = parser.parse(response.text)
 
-        for job_data in jobs:
-            await self._repo.update_or_create(job_data)
+        if not jobs:
+            logger.info("No new jobs found on Habr Career.")
+            return
 
-        logger.info(f"Processed {len(jobs)} jobs from {url}")
+        logger.info("Found {count} jobs on the page.", count=len(jobs))
+
+        new_jobs_count = 0
+        for job_schema in jobs:
+            existing_job = await self._repo.get_job_by_url(job_schema.url)
+            if not existing_job:
+                await self._repo.create_job(
+                    title=job_schema.title,
+                    url=job_schema.url,
+                    company=job_schema.company,
+                    description=job_schema.description,
+                    location=job_schema.location,
+                    salary=job_schema.salary,
+                )
+                new_jobs_count += 1
+                logger.bind(notify=True).info(
+                    "✅ Found new job: {title}", title=job_schema.title,
+                )
+
+        logger.info(
+            "Habr Career processing finished. Added {count} new jobs.",
+            count=new_jobs_count,
+        )
