@@ -1,0 +1,55 @@
+# config.yaml
+
+frontend:
+  # Настройки, нужные вашему фронтенду
+  serve:
+    host: localhost
+    port: 3000
+  # Путь к собранным статикам (если вы его раздаёте через бэкенд)
+  static_dir: frontend/build
+
+backend:
+  # Секция логгера
+  logger:
+    log_level: WARNING
+    std_log_level: WARNING
+
+    use_file_handler: false
+    file_handler:
+      path: app_data/log/app.log
+      level: DEBUG
+      rotation: 10 MB
+      retention: 7 days
+      compression: zip
+
+    use_telegram_handler: false
+    telegram_handler:
+      bot_token: "<YOUR_BOT_TOKEN>"
+      admin_ids: [123456789, 987654321]
+      level: WARNING
+      timeout: 5
+
+    use_telegram_notifier: false
+    telegram_notifier:
+      bot_token: "<YOUR_BOT_TOKEN>"
+      admin_ids: [123456789]
+      name: telegram
+      timeout: 5
+
+    use_websocket_handler: false
+    websocket_handler:
+      level: DEBUG
+      max_history: 1000
+
+  # Секция базы данных
+  database:
+    host: db.example.com
+    port: 5432
+    user: app_user
+    password: <your_password>
+    name: my_database
+
+  # Секция API-сервера
+  api:
+    host: 0.0.0.0
+    port: 8000 

@@ -1,8 +1,9 @@
-
 import httpx
+from fastapi import HTTPException
 from loguru import logger
 
 from src.core.parsers.habr import HabrParser
+from src.db.models import Job
 from src.db.repository import JobRepository
 
 
@@ -20,6 +21,15 @@ class JobService:
             repo: An instance of JobRepository.
         """
         self._repo = repo or JobRepository()
+
+    async def get_all_jobs(self) -> list[Job]:
+        """
+        Retrieves all job vacancies from the database.
+
+        Returns:
+            list[Job]: A list of all job vacancies.
+        """
+        return await self._repo.get_all_jobs()
 
     async def process_habr_vacancies(self) -> None:
         """
@@ -72,3 +82,21 @@ class JobService:
             "Habr Career processing finished. Added {count} new jobs.",
             count=new_jobs_count,
         )
+
+    async def get_job_by_id(self, job_id: int) -> Job:
+        """
+        Retrieves a job by its ID.
+
+        Args:
+            job_id: The ID of the job to retrieve.
+
+        Returns:
+            The job object.
+
+        Raises:
+            HTTPException: If the job with the specified ID is not found.
+        """
+        job = await self._repo.get_by_id(job_id)
+        if not job:
+            raise HTTPException(status_code=404, detail="Job not found")
+        return job
