@@ -43,7 +43,7 @@ async def test_full_cycle_via_scheduler(
     # 3. Patch the scheduler's default job setup to run immediately
     # We prevent the original setup (e.g., 60-minute interval) from running.
     mocker.patch(
-        "src.scheduler.scheduler.TaskScheduler.setup_jobs", return_value=None
+        "src.scheduler.scheduler.TaskScheduler.setup_jobs", return_value=None,
     )
 
     # 4. Initialize the scheduler and manually add a fast, repeating job

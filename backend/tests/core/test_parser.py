@@ -32,7 +32,8 @@ def test_habr_parser_returns_correct_job_list(habr_html_content: str) -> None:
     # 3. Assert
     # The test HTML has 3 vacancy cards, but one is malformed (no title link).
     # The parser should gracefully skip it and return 2 valid jobs.
-    assert len(jobs) == 2
+    expected_jobs_count = 2
+    assert len(jobs) == expected_jobs_count
 
     # Check the first job in detail
     first_job = jobs[0]
