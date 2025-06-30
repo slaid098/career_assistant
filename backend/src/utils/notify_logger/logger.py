@@ -65,8 +65,7 @@ class NotifyLogger:
 
         self._remove_loguru_logger()
 
-        # Always add a default console handler
-        ConsoleHandler(level=level).add()
+        self._init_default_handler(level)
 
         for handler in handlers:
             handler.add()
