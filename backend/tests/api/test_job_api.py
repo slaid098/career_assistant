@@ -100,8 +100,12 @@ async def test_get_all_jobs_returns_list_of_jobs(job_repository: JobRepository) 
 
     response_data = response.json()
     assert len(response_data) == expected_jobs_count
-    assert response_data[0]["title"] == "Python Developer"
-    assert response_data[1]["title"] == "Data Scientist"
+
+    # Создаем множество названий вакансий из ответа для быстрой проверки.
+    # Это делает тест независимым от порядка возвращаемых данных.
+    response_titles = {job["title"] for job in response_data}
+    expected_titles = {"Python Developer", "Data Scientist"}
+    assert response_titles == expected_titles
 
 
 def test_get_job_by_id_returns_404_for_nonexistent_job() -> None:
