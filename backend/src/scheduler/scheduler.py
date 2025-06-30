@@ -43,7 +43,7 @@ class TaskScheduler:
             self._is_running = False
             logger.info("планировщик остановлен", author=self.name)
 
-    def add_interval_job(  # noqa: PLR0913
+    def add_interval_job(
         self,
         func: Callable[..., Coroutine[Any, Any, Any]],
         hours: int = 0,
