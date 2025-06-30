@@ -70,6 +70,40 @@ def test_get_all_jobs_endpoint_returns_empty_list_initially() -> None:
     assert response.json() == []
 
 
+@pytest.mark.asyncio
+async def test_get_all_jobs_returns_list_of_jobs(job_repository: JobRepository) -> None:
+    """
+    Test that GET /api/v1/jobs endpoint returns a list of jobs when the database is not empty.
+    """
+    # Arrange: Create multiple jobs
+    await job_repository.add_one(
+        title="Python Developer",
+        company="Company A",
+        url="https://companya.com/job/1",
+        description="Desc A",
+    )
+    await job_repository.add_one(
+        title="Data Scientist",
+        company="Company B",
+        url="https://companyb.com/job/2",
+        description="Desc B",
+    )
+    client = TestClient(app)
+
+    # Act
+    response = client.get("/api/v1/jobs")
+
+    # Assert
+    success_status_code = 200
+    expected_jobs_count = 2
+    assert response.status_code == success_status_code
+
+    response_data = response.json()
+    assert len(response_data) == expected_jobs_count
+    assert response_data[0]["title"] == "Python Developer"
+    assert response_data[1]["title"] == "Data Scientist"
+
+
 def test_get_job_by_id_returns_404_for_nonexistent_job() -> None:
     """
     Test that GET /api/v1/jobs/{job_id} endpoint returns 404 Not Found for a job that does
