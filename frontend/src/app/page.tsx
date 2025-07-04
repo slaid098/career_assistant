@@ -1,4 +1,5 @@
 import { getJobs } from "@/services/jobService";
+import JobCard from "@/components/JobCard";
 
 export default async function Home() {
   const jobs = await getJobs();
@@ -7,10 +8,7 @@ export default async function Home() {
     <main>
       <h1>Job Listings</h1>
       {jobs.map((job) => (
-        <div key={job.id}>
-          <h2>{job.title}</h2>
-          <p>{job.company}</p>
-        </div>
+        <JobCard key={job.id} job={job} />
       ))}
     </main>
   );
