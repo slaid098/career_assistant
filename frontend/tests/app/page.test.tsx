@@ -1,5 +1,4 @@
-import { render } from '@testing-library/react';
-import { screen } from '@testing-library/dom';
+import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import Home from '@/app/page';
 import * as jobService from '@/services/jobService';
@@ -8,6 +7,10 @@ import { Job } from '@/services/jobService.types';
 jest.mock('@/services/jobService');
 
 describe('Home page', () => {
+    // Добавляем очистку моков перед каждым тестом для изоляции
+    beforeEach(() => {
+        jest.clearAllMocks();
+    });
 
     const mockJobs: Job[] = [
         {
@@ -38,6 +41,17 @@ describe('Home page', () => {
 
         expect(screen.getByText('CreativeMinds')).toBeInTheDocument();
 
+        expect(jobService.getJobs).toHaveBeenCalledTimes(1);
+    });
+
+    // Наш новый "красный" тест
+    it('should display a message when no jobs are found', async () => {
+        (jobService.getJobs as jest.Mock).mockResolvedValue([]);
+
+        const PageComponent = await Home();
+        render(PageComponent);
+
+        expect(screen.getByText('No jobs available at the moment.')).toBeInTheDocument();
         expect(jobService.getJobs).toHaveBeenCalledTimes(1);
     });
 });
