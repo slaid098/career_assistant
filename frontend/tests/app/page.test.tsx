@@ -16,6 +16,7 @@ describe('Home page', () => {
             company: 'FutureTech',
             url: 'http://example.com/1',
             created_at: new Date().toISOString(),
+            description: 'A great job for a Python expert.',
         },
         {
             id: 2,
@@ -23,6 +24,7 @@ describe('Home page', () => {
             company: 'CreativeMinds',
             url: 'http://example.com/2',
             created_at: new Date().toISOString(),
+            description: 'A great job for a React expert.',
         },
     ];
 
