@@ -7,7 +7,6 @@ import { Job } from '@/services/jobService.types';
 jest.mock('@/services/jobService');
 
 describe('Home page', () => {
-    // Добавляем очистку моков перед каждым тестом для изоляции
     beforeEach(() => {
         jest.clearAllMocks();
     });
@@ -44,7 +43,6 @@ describe('Home page', () => {
         expect(jobService.getJobs).toHaveBeenCalledTimes(1);
     });
 
-    // Наш новый "красный" тест
     it('should display a message when no jobs are found', async () => {
         (jobService.getJobs as jest.Mock).mockResolvedValue([]);
 

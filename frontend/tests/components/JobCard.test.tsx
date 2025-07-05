@@ -11,17 +11,15 @@ describe('JobCard component', () => {
     company: 'Innovate Inc.',
     url: 'https://example.com/job/1',
     created_at: new Date().toISOString(),
-    description: 'A detailed job description.', // Добавляем недостающее свойство
+    description: 'A detailed job description.',
   };
 
   it('should render the job title, company name, and be a valid link', () => {
     render(<JobCard job={mockJob} />);
 
-    // Проверяем, что текст на месте
     expect(screen.getByText('Senior Software Engineer')).toBeInTheDocument();
     expect(screen.getByText('Innovate Inc.')).toBeInTheDocument();
 
-    // Проверяем, что это ссылка и она ведет на правильный URL
     const linkElement = screen.getByRole('link');
     expect(linkElement).toHaveAttribute('href', `/jobs/${mockJob.id}`);
   });
