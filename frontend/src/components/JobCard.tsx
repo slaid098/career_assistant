@@ -1,4 +1,5 @@
 import React from 'react';
+import Link from 'next/link';
 import { Job } from '@/services/jobService.types';
 
 type JobCardProps = {
@@ -7,10 +8,10 @@ type JobCardProps = {
 
 const JobCard: React.FC<JobCardProps> = ({ job }) => {
   return (
-    <div>
-      <h2>{job.title}</h2>
-      <p>{job.company}</p>
-    </div>
+    <Link href={`/jobs/${job.id}`} className="block p-4 border rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200">
+      <h2 className="text-xl font-semibold">{job.title}</h2>
+      <p className="text-gray-600">{job.company}</p>
+    </Link>
   );
 };
 
