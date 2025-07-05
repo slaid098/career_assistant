@@ -4,4 +4,5 @@ export interface Job {
     url: string;
     company: string;
     created_at: string;
+    description: string;
 }
