@@ -7,6 +7,8 @@ describe('jobService', () => {
     fetchMock.resetMocks();
   });
 
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+
   it('should fetch and return a list of jobs', async () => {
     const mockJobs: Job[] = [
       {
@@ -32,8 +34,7 @@ describe('jobService', () => {
     const jobs = await getJobs();
 
     expect(fetchMock.mock.calls.length).toBe(1);
-    const expectedUrl = new URL('/jobs', process.env.NEXT_PUBLIC_API_BASE_URL!).toString();
-    expect(fetchMock.mock.calls[0][0]).toBe(expectedUrl);
+    expect(fetchMock.mock.calls[0][0]).toBe(`${apiUrl}/jobs`);
 
     expect(jobs).toEqual(mockJobs);
   });
@@ -51,8 +52,7 @@ describe('jobService', () => {
 
     const job = await getJobById('1');
 
-    const expectedUrl = new URL('/jobs/1', process.env.NEXT_PUBLIC_API_BASE_URL!).toString();
-    expect(fetchMock.mock.calls[0][0]).toBe(expectedUrl);
+    expect(fetchMock.mock.calls[0][0]).toBe(`${apiUrl}/jobs/1`);
     expect(job).toEqual(mockJob);
   });
 
@@ -61,8 +61,7 @@ describe('jobService', () => {
 
     const job = await getJobById('999');
 
-    const expectedUrl = new URL('/jobs/999', process.env.NEXT_PUBLIC_API_BASE_URL!).toString();
-    expect(fetchMock.mock.calls[0][0]).toBe(expectedUrl);
+    expect(fetchMock.mock.calls[0][0]).toBe(`${apiUrl}/jobs/999`);
     expect(job).toBeNull();
   });
 });

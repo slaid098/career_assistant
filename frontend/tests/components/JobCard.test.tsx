@@ -23,4 +23,9 @@ describe('JobCard component', () => {
     const linkElement = screen.getByRole('link');
     expect(linkElement).toHaveAttribute('href', `/jobs/${mockJob.id}`);
   });
+
+  it('should match the snapshot', () => {
+    const { container } = render(<JobCard job={mockJob} />);
+    expect(container).toMatchSnapshot();
+  });
 }); 
