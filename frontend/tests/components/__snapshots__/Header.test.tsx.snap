@@ -1,0 +1,21 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`Header Component should match the snapshot 1`] = `
+<div>
+  <header
+    class="bg-gray-800 text-white p-4 shadow-md"
+  >
+    <div
+      class="container mx-auto flex justify-between items-center"
+    >
+      <a
+        class="text-2xl font-bold"
+        href="/"
+      >
+        Career Assistant
+      </a>
+      <nav />
+    </div>
+  </header>
+</div>
+`;
